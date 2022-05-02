@@ -150,8 +150,6 @@ def getDescendant(one,two,diff):
     return one
 
 
-
-
 def new_trees():
     ancestralTrees = {}
     for letter in list("ABCDEFGHIJKLMNOPQRSTUVWXYZ"):
@@ -166,3 +164,86 @@ trees["D"].addDescendants(trees["H"], trees["I"])
 trees["C"].addDescendants(trees["F"], trees["G"])
 
 print(getYoungestCommonAncestor(trees["A"], trees["E"], trees["I"]).name)
+
+
+def removeIslands(matrix):
+    rows = len(matrix)
+    cols = len(matrix[0])
+    for row in range(rows):
+        for col in range(cols):
+            rowBorder = True if row in [0, rows-1] else False
+            colBorder = True if row in [0,col-1] else False
+            border = rowBorder or colBorder
+            if not border:
+                continue
+            if matrix[row][col]!=1:
+                continue
+            setBorderOnesToTwos(matrix,row,col)
+
+    for row in range(rows):
+        for col in range(cols):
+            if matrix[row][col]==1:
+                matrix[row][col]=0
+            if matrix[row][col]==2:
+                matrix[row][col]=1
+    return matrix
+
+
+def setBorderOnesToTwos(matrix,row,col):
+    stack = [(row,col)]
+    while stack:
+        row,col = stack.pop()
+        if matrix[row][col]!=1:
+            continue
+        matrix[row][col]=2
+        neighbors= getNeighbors(matrix,row,col)
+        for row,col in neighbors:
+            if matrix[row][col]!=1:
+                continue
+            stack.append((row,col))
+
+def getNeighbors(matrix,row,col):
+    neighbors =[]
+    if row >0:
+        neighbors.append((row-1,col))
+    if row<len(matrix)-1:
+        neighbors.append((row+1,col))
+    if col>0:
+        neighbors.append((row,col-1))
+    if col<len(matrix[0])-1:
+        neighbors.append((row,col+1))
+    return neighbors
+
+
+input = [
+            [1, 0, 0, 0, 0, 0],
+            [0, 1, 0, 1, 1, 1],
+            [0, 0, 1, 0, 1, 0],
+            [1, 1, 0, 0, 1, 0],
+            [1, 0, 1, 1, 0, 0],
+            [1, 0, 0, 0, 0, 1],
+        ]
+
+print(removeIslands(input))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
